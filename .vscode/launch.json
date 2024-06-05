@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-GiftcardgeneratorApplication<giftcardgenerator>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.giftcardgenerator.GiftcardgeneratorApplication",
+            "projectName": "giftcardgenerator",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

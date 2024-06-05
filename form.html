@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business Card Generator</title>
+  <link rel="stylesheet" href="form-styles.css">
+</head>
+<body>
+  <div class="form-container">
+    <form id="cardForm">
+      <h1>Business Card Generator</h1>
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+      
+      <label for="title">Title:</label>
+      <input type="text" id="title" name="title" required>
+      
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+      
+      <label for="phone">Phone:</label>
+      <input type="tel" id="phone" name="phone" required>
+      
+      <label for="linkedin">LinkedIn URL:</label>
+      <input type="url" id="linkedin" name="linkedin">
+      
+      <label for="leetcode">LeetCode URL:</label>
+      <input type="url" id="leetcode" name="leetcode">
+      
+      <label for="github">GitHub URL:</label>
+      <input type="url" id="github" name="github">
+      
+      <button type="submit">Generate Card</button>
+    </form>
+    <div id="cardIdContainer" class="card-id-container" style="display:none;">
+      <p>Your card ID: <span id="cardId"></span></p>
+    </div>
+    <p style="text-align:center; margin-top: 10px;">
+        <a href="getdetails.html">Get Card Details</a>
+    </p>
+  </div>
+
+  <script>
+    document.getElementById('cardForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      
+      // Get form values
+      const name = document.getElementById('name').value;
+      const title = document.getElementById('title').value;
+      const email = document.getElementById('email').value;
+      const phone = document.getElementById('phone').value;
+      const linkedin = document.getElementById('linkedin').value;
+      const leetcode = document.getElementById('leetcode').value;
+      const github = document.getElementById('github').value;
+
+      const cardData = {
+        name: name,
+        title: title,
+        email: email,
+        phone: phone,
+        linkedin: linkedin,
+        leetcode: leetcode,
+        github: github
+      };
+
+      fetch('http://localhost:9000/api/cards', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(cardData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        localStorage.setItem('cardId', data.id);
+        
+        // Display card ID
+        const cardIdContainer = document.getElementById('cardIdContainer');
+        const cardIdSpan = document.getElementById('cardId');
+        cardIdSpan.textContent = data.id;
+        cardIdContainer.style.display = 'block';
+        
+        
+      })
+      .catch(error => console.error('Error:', error));
+    });
+  </script>
+</body>
+</html>

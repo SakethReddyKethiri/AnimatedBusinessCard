@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business Card</title>
+  <link rel="stylesheet" href="business-card-styles.css">
+</head>
+<body>
+  <div id="idInputForm">
+    <h2>Enter Business Card ID</h2>
+    <form id="getByIdForm">
+        <input type="text" id="idInput" placeholder="Enter ID" required><br>
+        <button type="button" onclick="getBusinessCard()">Get Business Card</button>
+    </form>
+    <p id="errorMessage" style="color: red; text-align: center; display: none;">Card ID not found. Please register the card</p>
+    <p style="text-align:center; margin-top: 10px;">
+        <a href="form.html">Register New Card</a>
+    </p>
+  </div>
+
+  <div id="cardContainer" style="display: none;">
+    <div class="card-container">
+        <div class="card">
+            <img src="solo.png" alt="Sandeep Reddy" class="avatar">
+            <div class="info">
+                <h1 id="cardName">Sandeep Reddy</h1>
+                <p id="cardTitle">Web Developer</p>
+                <p id="cardEmail">ksaisandeep08@gmail.com</p>
+                <p id="cardPhone">9014446836</p>
+                <div class="social-icons">
+                    <a href="#" id="linkedinLink" target="_blank">
+                        <img src="linkedin.png" alt="Linkedin"></a>
+                    <a href="#" id="leetcodeLink" target="_blank">
+                        <img src="leetcode.png" alt="LeetCode"></a>
+                    <a href="#" id="githubLink" target="_blank">
+                        <img src="github.png" alt="GitHub"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <style>
+    /* Apply same styles for the input form as the business card */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: black;
+        padding: 20px;
+    }
+    
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    
+    #idInputForm{
+        max-width: 300px;
+        margin: 0 auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    input[type="text"], input[type="email"], input[type="tel"], button {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+    
+    button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    
+    button:hover {
+        background-color: #0056b3;
+    }
+
+  </style>
+
+  <script>
+    function getBusinessCard() {
+      var cardId = document.getElementById('idInput').value;
+      
+      fetch(`http://localhost:9000/api/cards/${cardId}`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Business card not found');
+          }
+          return response.json();
+        })
+        .then(data => {
+          document.getElementById('cardName').textContent = data.name || 'Your Name';
+          document.getElementById('cardTitle').textContent = data.title || 'Your Title';
+          document.getElementById('cardEmail').textContent = data.email || 'your.email@example.com';
+          document.getElementById('cardPhone').textContent = data.phone || '123-456-7890';
+
+          const linkedinLink = document.getElementById('linkedinLink');
+          const leetcodeLink = document.getElementById('leetcodeLink');
+          const githubLink = document.getElementById('githubLink');
+
+          if (data.linkedin) {
+              linkedinLink.href = data.linkedin;
+              linkedinLink.style.display = 'inline';
+          } else {
+              linkedinLink.style.display = 'none';
+          }
+
+          if (data.leetcode) {
+              leetcodeLink.href = data.leetcode;
+              leetcodeLink.style.display = 'inline';
+          } else {
+              leetcodeLink.style.display = 'none';
+          }
+
+          if (data.github) {
+              githubLink.href = data.github;
+              githubLink.style.display = 'inline';
+          } else {
+              githubLink.style.display = 'none';
+          }
+
+          // Hide ID input form and show the card container
+          document.getElementById('idInputForm').style.display = 'none';
+          document.getElementById('cardContainer').style.display = 'block';
+          document.getElementById('errorMessage').style.display = 'none';
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          document.getElementById('errorMessage').style.display = 'block';
+        });
+    }
+  </script>
+</body>
+</html>
